@@ -340,7 +340,6 @@ int NFA::Step(Threadq* runq, Threadq* nextq, int c, int flag, const char* p) {
         if (endmatch_ && p != etext_)
           break;
 
-        const char* old = t->capture[1];  // previous end pointer
         t->capture[1] = p;
         if (longest_) {
           // Leftmost-longest mode: save this match only if
@@ -357,7 +356,6 @@ int NFA::Step(Threadq* runq, Threadq* nextq, int c, int flag, const char* p) {
           // Cut off the threads that can only find matches
           // worse than the one we just found: don't run the
           // rest of the current Threadq.
-          t->capture[0] = old;
           FreeThread(t);
           for (++i; i != runq->end(); ++i)
             FreeThread(i->second);
@@ -365,7 +363,6 @@ int NFA::Step(Threadq* runq, Threadq* nextq, int c, int flag, const char* p) {
           matched_ = true;
           return 0;
         }
-        t->capture[0] = old;
         matched_ = true;
         break;
     }
